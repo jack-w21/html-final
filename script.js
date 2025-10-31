@@ -1,165 +1,127 @@
-const canvas = document.getElementById("bgCanvas");
-const ctx = canvas.getContext("2d");
+
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
 
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
-
-window.addEventListener("resize", resizeCanvas);
-resizeCanvas(); // run only 1 time
-
-
-let particles = [];
-const particleCount = 120;
-const mouse = { x: null, y: null };
-
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
-window.addEventListener('mousemove', e => {
-    mouse.x = e.x;
-    mouse.y = e.y;
-});
 
-class Particle {
-    constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.baseX = this.x;
-        this.baseY = this.y;
-        this.density = Math.random() * 30 + 1;
-    }
-    draw() {
-        ctx.fillStyle = '#fff';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.closePath();
-        ctx.fill();
-    }
-    update() {
-        if (mouse.x && mouse.y) {
-            let dx = mouse.x - this.x;
-            let dy = mouse.y - this.y;
-            let dist = Math.sqrt(dx * dx + dy * dy);
-            let maxDist = 120;
-            if (dist < maxDist) {
-                let force = (maxDist - dist) / maxDist;
-                this.x -= dx / 10 * force * this.density;
-                this.y -= dy / 10 * force * this.density;
-            } else {
-                this.x += (this.baseX - this.x) / 20;
-                this.y += (this.baseY - this.y) / 20;
-            }
-        }
-    }
-}
+let particles = [];
+const PARTICLE_COUNT = 70;
+let mouse = { x: null, y: null };
+window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
 
 function initParticles() {
     particles = [];
-    for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 2 + 1,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5
+        });
     }
 }
+initParticles();
 
-function animateParticles() {
+function drawParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     particles.forEach(p => {
-        p.update();
-        p.draw();
-    });
-    requestAnimationFrame(animateParticles);
-}
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.fill();
 
-initParticles();
-animateParticles();
-
-
-let score = 0;
-let wrongCount = 0;
-const maxWrong = 5;
-let questions = [];
-
-const API_URL = "https://api.allorigins.win/get?url=" +
-    encodeURIComponent("https://opentdb.com/api.php?amount=50&type=multiple&encode=url3986");
-
-async function loadQuestions() {
-    const res = await fetch(API_URL);
-    const wrapped = await res.json();
-    const data = JSON.parse(wrapped.contents);
-    questions = data.results;
-    shuffleArray(questions);
-    showQuestion();
-}
-
-function showQuestion() {
-    if (!document.getElementById("question")) return; // dont do on the home page
-    if (wrongCount >= maxWrong) {
-        document.querySelector(".container").innerHTML = `
-            <h1>Game Over!</h1>
-            <p>You got ${wrongCount} wrong answers. Your score: ${score}</p>
-            <a class="btn" href="quiz.html">Play Again</a>
-            <a class="btn" href="index.html">Home</a>
-        `;
-        return;
-    }
-    if (questions.length === 0) {
-        loadQuestions();
-        return;
-    }
-
-    const randomIndex = Math.floor(Math.random() * questions.length);
-    const q = questions.splice(randomIndex, 1)[0];
-    const questionText = decodeURIComponent(q.question);
-    const correct = decodeURIComponent(q.correct_answer);
-    const options = q.incorrect_answers.map(a => decodeURIComponent(a));
-    options.push(correct);
-    shuffleArray(options);
-
-    document.getElementById("question").innerHTML = questionText;
-    document.getElementById("scoreDisplay").innerText = `Score: ${score} | Wrong: ${wrongCount}/${maxWrong}`;
-
-    const optionsDiv = document.getElementById("options");
-    optionsDiv.innerHTML = "";
-
-    options.forEach(option => {
-        const btn = document.createElement("button");
-        btn.classList.add("option-btn");
-        btn.innerHTML = option;
-
-        btn.onclick = () => {
-            if (option === correct) {
-                btn.style.background = "green";
-                score++;
-            } else {
-                btn.style.background = "red";
-                wrongCount++;
+        // simple mouse effect
+        if (mouse.x !== null) {
+            const dx = p.x - mouse.x;
+            const dy = p.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 100) {
+                p.x += (dx / dist) * 0.5;
+                p.y += (dy / dist) * 0.5;
             }
-            document.querySelectorAll(".option-btn").forEach(b => b.disabled = true);
-            document.getElementById("scoreDisplay").innerText = `Score: ${score} | Wrong: ${wrongCount}/${maxWrong}`;
-        };
+        }
 
-        optionsDiv.appendChild(btn);
+        // wrap edges
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        p.x += p.vx;
+        p.y += p.vy;
     });
+    requestAnimationFrame(drawParticles);
 }
+drawParticles();
 
 
-document.getElementById("nextBtn")?.addEventListener("click", showQuestion);
+const questionEl = document.getElementById('question');
+const optionsEl = document.getElementById('options');
+let currentAnswer = '';
 
+async function loadQuestion() {
+    if (!questionEl || !optionsEl) return;
 
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+    questionEl.textContent = "Loading question...";
+    optionsEl.innerHTML = "";
+
+    try {
+        // CORS-safe fetch via AllOrigins
+        const apiURL = "https://api.allorigins.win/get?url=" +
+            encodeURIComponent("https://opentdb.com/api.php?amount=1&type=multiple");
+        const res = await fetch(apiURL);
+        const wrapped = await res.json();
+        const data = JSON.parse(wrapped.contents);
+
+        const q = data.results[0];
+
+        const parser = new DOMParser();
+        const decode = t => parser.parseFromString(t, "text/html").body.textContent;
+
+        currentAnswer = decode(q.correct_answer);
+
+        const options = [...q.incorrect_answers.map(decode), currentAnswer];
+        options.sort(() => Math.random() - 0.5);
+
+        questionEl.textContent = decode(q.question);
+        optionsEl.innerHTML = '';
+
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.textContent = opt;
+            btn.onclick = () => checkAnswer(opt);
+            optionsEl.appendChild(btn);
+        });
+
+    } catch (err) {
+        console.error(err);
+        questionEl.textContent = "Failed to load question. Please try again.";
     }
 }
 
+function checkAnswer(selected) {
+    if (!selected) return;
 
-if (document.getElementById("question")) {
-    loadQuestions();
+    const buttons = document.querySelectorAll('.option-btn');
+    buttons.forEach(b => b.disabled = true);
+
+    if (selected === currentAnswer) {
+        alert('✅ Correct!');
+    } else {
+        alert(`❌ Wrong! Correct answer: ${currentAnswer}`);
+    }
+
+    setTimeout(loadQuestion, 300); // auto-load next question
 }
+
+// load first question
+loadQuestion();
+
