@@ -1,4 +1,3 @@
-
 const canvas = document.getElementById("bgCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -8,7 +7,7 @@ function resizeCanvas() {
 }
 
 window.addEventListener("resize", resizeCanvas);
-resizeCanvas(); // run once on load
+resizeCanvas(); // run only 1 time
 
 
 let particles = [];
@@ -99,7 +98,7 @@ async function loadQuestions() {
 }
 
 function showQuestion() {
-    if (!document.getElementById("question")) return; // skip if on homepage
+    if (!document.getElementById("question")) return; // dont do on the home page
     if (wrongCount >= maxWrong) {
         document.querySelector(".container").innerHTML = `
             <h1>Game Over!</h1>
@@ -164,5 +163,3 @@ function shuffleArray(array) {
 if (document.getElementById("question")) {
     loadQuestions();
 }
-
-

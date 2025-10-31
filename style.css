@@ -35,9 +35,6 @@ body {
     }
 }
 
-
-/* NAVBAR */
-
 nav {
     position: fixed;
     top: 0;
@@ -62,9 +59,6 @@ nav a:hover {
     transform: scale(1.08);
 }
 
-
-/* QUIZ BOX — fluid across devices */
-
 .container {
     background: #fff;
     padding: clamp(12px, 2vw, 30px);
@@ -82,9 +76,6 @@ nav a:hover {
     overflow: hidden;
 }
 
-
-/* Question text fancy font */
-
 #question {
     font-family: sans-serif;
     font-size: clamp(18px, 3vw, 34px);
@@ -92,9 +83,6 @@ nav a:hover {
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
     margin-bottom: 2vh;
 }
-
-
-/* Buttons scale fluid */
 
 .option-btn {
     width: 100%;
@@ -114,9 +102,6 @@ nav a:hover {
     transform: translateY(-2px);
 }
 
-
-/* Next button */
-
 .btn {
     padding: clamp(10px, 2vw, 18px);
     margin-top: 2vh;
@@ -134,17 +119,11 @@ nav a:hover {
     transform: translateY(-2px);
 }
 
-
-/* Score */
-
 #scoreDisplay {
     font-size: clamp(14px, 2vw, 18px);
     font-weight: bold;
     margin-top: 1vh;
 }
-
-
-/* Very small screens fix */
 
 @media (max-height: 600px) {
     .container {
