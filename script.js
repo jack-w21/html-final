@@ -35,7 +35,6 @@ function drawParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     particles.forEach(p => {
-        // mouse interaction: repel particles
         if (mouse.x !== null) {
             const dx = p.x - mouse.x;
             const dy = p.y - mouse.y;
@@ -48,17 +47,14 @@ function drawParticles() {
             }
         }
 
-        // move normally
         p.x += p.vx;
         p.y += p.vy;
 
-        // wrap around edges
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height;
         if (p.y > canvas.height) p.y = 0;
 
-        // draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = `hsl(${p.hue}, 70%, 80%)`;
@@ -68,6 +64,7 @@ function drawParticles() {
     requestAnimationFrame(drawParticles);
 }
 drawParticles();
+
 
 const questionEl = document.getElementById('question');
 const optionsEl = document.getElementById('options');
@@ -85,7 +82,6 @@ async function loadQuestion() {
     optionsEl.innerHTML = "";
 
     try {
-        // CORS-safe fetch
         const apiURL = "https://api.allorigins.win/get?url=" +
             encodeURIComponent("https://opentdb.com/api.php?amount=1&type=multiple");
         const res = await fetch(apiURL);
@@ -108,7 +104,7 @@ async function loadQuestion() {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
             btn.textContent = opt;
-            btn.onclick = () => checkAnswer(opt);
+            btn.onclick = () => checkAnswer(btn);
             optionsEl.appendChild(btn);
         });
 
@@ -118,32 +114,35 @@ async function loadQuestion() {
     }
 }
 
-function checkAnswer(selected) {
-    if (!selected) return;
-
+function checkAnswer(selectedBtn) {
     const buttons = document.querySelectorAll('.option-btn');
     buttons.forEach(b => b.disabled = true);
 
-    if (selected === currentAnswer) {
+    buttons.forEach(b => {
+        if (b.textContent === currentAnswer) {
+            b.style.backgroundColor = '#4CAF50'; // green correct
+        } else if (b === selectedBtn && b.textContent !== currentAnswer) {
+            b.style.backgroundColor = '#f44336'; // red wrong
+        }
+    });
+
+    if (selectedBtn.textContent === currentAnswer) {
         score++;
         scoreEl.textContent = score;
-        alert("✅ Correct!");
     } else {
         lives--;
         livesEl.textContent = lives;
-        alert(`❌ Wrong! Correct answer: ${currentAnswer}`);
     }
 
     if (lives <= 0) {
         questionEl.textContent = "💀 Game Over!";
-        optionsEl.innerHTML = `<button onclick="location.reload()">Restart</button>`;
+        optionsEl.innerHTML += `<button onclick="location.reload()">Restart</button>`;
         return;
     }
 
-    // Load next question after short delay
-    setTimeout(loadQuestion, 300);
+    setTimeout(loadQuestion, 1000);
 }
 
-// Initialize
+// Initialize first question
 if (questionEl) loadQuestion();
 
