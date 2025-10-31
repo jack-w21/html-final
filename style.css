@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Pacifico&display=swap');
+body {
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    background: linear-gradient(270deg, #6a11cb, #2575fc);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#bgCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    display: block;
+}
+
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+/* NAVBAR */
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 1.2vh 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+nav a {
+    margin: 0 2vw;
+    text-decoration: none;
+    font-weight: bold;
+    color: #333;
+    font-size: clamp(14px, 2vw, 20px);
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: #2575fc;
+    transform: scale(1.08);
+}
+
+
+/* QUIZ BOX — fluid across devices */
+
+.container {
+    background: #fff;
+    padding: clamp(12px, 2vw, 30px);
+    width: clamp(280px, 80vw, 600px);
+    min-height: clamp(260px, 40vh, 500px);
+    max-height: 80vh;
+    margin: auto;
+    margin-top: clamp(60px, 12vh, 140px);
+    margin-bottom: clamp(20px, 8vh, 80px);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+
+/* Question text fancy font */
+
+#question {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(18px, 3vw, 34px);
+    color: #000;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+    margin-bottom: 2vh;
+}
+
+
+/* Buttons scale fluid */
+
+.option-btn {
+    width: 100%;
+    margin: 0.8vh 0;
+    padding: clamp(8px, 1.8vw, 16px);
+    font-size: clamp(14px, 2vw, 22px);
+    border-radius: 12px;
+    border: 2px solid #2575fc;
+    cursor: pointer;
+    background: #fff;
+    transition: 0.25s;
+}
+
+.option-btn:hover:not(:disabled) {
+    background: #2575fc;
+    color: white;
+    transform: translateY(-2px);
+}
+
+
+/* Next button */
+
+.btn {
+    padding: clamp(10px, 2vw, 18px);
+    margin-top: 2vh;
+    font-size: clamp(14px, 2vw, 22px);
+    border-radius: 12px;
+    background: #2575fc;
+    color: white;
+    cursor: pointer;
+    transition: 0.25s;
+    border: none;
+}
+
+.btn:hover {
+    background: #6a11cb;
+    transform: translateY(-2px);
+}
+
+
+/* Score */
+
+#scoreDisplay {
+    font-size: clamp(14px, 2vw, 18px);
+    font-weight: bold;
+    margin-top: 1vh;
+}
+
+
+/* Very small screens fix */
+
+@media (max-height: 600px) {
+    .container {
+        margin-top: 60px;
+        min-height: auto;
+    }
+}
