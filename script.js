@@ -10,8 +10,9 @@ resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
 let particles = [];
-const PARTICLE_COUNT = 70;
+const PARTICLE_COUNT = 90; // more particles for visual richness
 let mouse = { x: null, y: null };
+
 window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
 window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
 
@@ -23,7 +24,8 @@ function initParticles() {
             y: Math.random() * canvas.height,
             r: Math.random() * 2 + 1,
             vx: (Math.random() - 0.5) * 0.5,
-            vy: (Math.random() - 0.5) * 0.5
+            vy: (Math.random() - 0.5) * 0.5,
+            hue: Math.random() * 360
         });
     }
 }
@@ -31,35 +33,43 @@ initParticles();
 
 function drawParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,0.8)';
-        ctx.fill();
 
-        // simple mouse effect
+    particles.forEach(p => {
+        // mouse interaction: repel particles
         if (mouse.x !== null) {
             const dx = p.x - mouse.x;
             const dy = p.y - mouse.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 100) {
-                p.x += (dx / dist) * 0.5;
-                p.y += (dy / dist) * 0.5;
+            const maxDist = 120;
+            if (dist < maxDist && dist > 0) {
+                const force = (maxDist - dist) / maxDist;
+                p.x += (dx / dist) * force * 1.5;
+                p.y += (dy / dist) * force * 1.5;
             }
         }
 
-        // wrap edges
+        // move normally
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // wrap around edges
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height;
         if (p.y > canvas.height) p.y = 0;
 
-        p.x += p.vx;
-        p.y += p.vy;
+        // draw particle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `hsl(${p.hue}, 70%, 80%)`;
+        ctx.fill();
     });
+
     requestAnimationFrame(drawParticles);
 }
 drawParticles();
+
+
 
 
 const questionEl = document.getElementById('question');
@@ -124,4 +134,5 @@ function checkAnswer(selected) {
 
 // load first question
 loadQuestion();
+
 
