@@ -86,7 +86,7 @@ nav a:hover {
 /* Question text fancy font */
 
 #question {
-    font-family: 'Pacifico', cursive;
+    font-family: sans-serif;
     font-size: clamp(18px, 3vw, 34px);
     color: #000;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
@@ -151,4 +151,11 @@ nav a:hover {
         margin-top: 60px;
         min-height: auto;
     }
+}
+
+peragrah {
+    font-family: pacifico;
+    padding: 5px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+    font-size: 25px;
 }
