@@ -10,7 +10,7 @@ resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
 let particles = [];
-const PARTICLE_COUNT = 90; // more particles for visual richness
+const PARTICLE_COUNT = 90;
 let mouse = { x: null, y: null };
 
 window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
@@ -69,21 +69,23 @@ function drawParticles() {
 }
 drawParticles();
 
-
-
-
 const questionEl = document.getElementById('question');
 const optionsEl = document.getElementById('options');
-let currentAnswer = '';
+const scoreEl = document.getElementById('score');
+const livesEl = document.getElementById('lives');
+
+let currentAnswer = "";
+let score = 0;
+let lives = 5;
 
 async function loadQuestion() {
-    if (!questionEl || !optionsEl) return;
+    if (lives <= 0) return;
 
     questionEl.textContent = "Loading question...";
     optionsEl.innerHTML = "";
 
     try {
-        // CORS-safe fetch via AllOrigins
+        // CORS-safe fetch
         const apiURL = "https://api.allorigins.win/get?url=" +
             encodeURIComponent("https://opentdb.com/api.php?amount=1&type=multiple");
         const res = await fetch(apiURL);
@@ -91,7 +93,6 @@ async function loadQuestion() {
         const data = JSON.parse(wrapped.contents);
 
         const q = data.results[0];
-
         const parser = new DOMParser();
         const decode = t => parser.parseFromString(t, "text/html").body.textContent;
 
@@ -124,15 +125,25 @@ function checkAnswer(selected) {
     buttons.forEach(b => b.disabled = true);
 
     if (selected === currentAnswer) {
-        alert('✅ Correct!');
+        score++;
+        scoreEl.textContent = score;
+        alert("✅ Correct!");
     } else {
+        lives--;
+        livesEl.textContent = lives;
         alert(`❌ Wrong! Correct answer: ${currentAnswer}`);
     }
 
-    setTimeout(loadQuestion, 300); // auto-load next question
+    if (lives <= 0) {
+        questionEl.textContent = "💀 Game Over!";
+        optionsEl.innerHTML = `<button onclick="location.reload()">Restart</button>`;
+        return;
+    }
+
+    // Load next question after short delay
+    setTimeout(loadQuestion, 300);
 }
 
-// load first question
-loadQuestion();
-
+// Initialize
+if (questionEl) loadQuestion();
 
