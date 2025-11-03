@@ -1,4 +1,3 @@
-
 const canvas = document.getElementById('bgCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -38,7 +37,7 @@ function drawParticles() {
         if (mouse.x !== null) {
             const dx = p.x - mouse.x;
             const dy = p.y - mouse.y;
-            const dist = Math.sqrt(dx*dx + dy*dy);
+            const dist = Math.sqrt(dx * dx + dy * dy);
             const range = 150;
             if (dist < range) {
                 const force = (range - dist) / range;
@@ -65,10 +64,10 @@ function drawParticles() {
         for (let j = i + 1; j < particles.length; j++) {
             const dx = particles[i].x - particles[j].x;
             const dy = particles[i].y - particles[j].y;
-            const dist = Math.sqrt(dx*dx + dy*dy);
+            const dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < 100) {
                 ctx.beginPath();
-                ctx.strokeStyle = `rgba(255,255,255,${1 - dist/100})`;
+                ctx.strokeStyle = `rgba(255,255,255,${1 - dist / 100})`;
                 ctx.lineWidth = 0.7;
                 ctx.moveTo(particles[i].x, particles[i].y);
                 ctx.lineTo(particles[j].x, particles[j].y);
@@ -79,7 +78,6 @@ function drawParticles() {
     requestAnimationFrame(drawParticles);
 }
 drawParticles();
-
 
 const questionEl = document.getElementById("question");
 const optionsEl = document.getElementById("options");
@@ -98,12 +96,11 @@ async function loadQuestion() {
 
     try {
         const apiURL =
-            "https://api.allorigins.win/get?url=" +
+            "https://api.allorigins.win/raw?url=" +
             encodeURIComponent("https://opentdb.com/api.php?amount=1&type=multiple");
 
         const res = await fetch(apiURL);
-        const wrapped = await res.json();
-        const data = JSON.parse(wrapped.contents);
+        const data = await res.json();
         const q = data.results[0];
 
         const decode = html =>
@@ -125,7 +122,7 @@ async function loadQuestion() {
         });
 
     } catch {
-        questionEl.textContent = "Error loading question. Try refresh.";
+        questionEl.textContent = "Error loading question. Refresh?";
     }
 }
 
