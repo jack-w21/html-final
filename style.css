@@ -140,12 +140,6 @@ peragrah {
 
 }
 
-.logo {
-    width: 120px;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    filter: drop-shadow(0 0 6px rgba(255,255,255,0.5));
-}
 
 .credit {
     margin-top: 20px;
@@ -162,5 +156,6 @@ peragrah {
 .credit a:hover {
     text-decoration: underline;
 }
+
 
 
