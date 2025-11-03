@@ -10,7 +10,7 @@ resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
 let particles = [];
-const PARTICLE_COUNT = 100; // more particles for effect
+const PARTICLE_COUNT = 100;
 let mouse = { x: null, y: null };
 
 window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
@@ -35,37 +35,32 @@ function drawParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     particles.forEach(p => {
-        // mouse interaction: stronger repulsion
         if (mouse.x !== null) {
             const dx = p.x - mouse.x;
             const dy = p.y - mouse.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            const maxDist = 150; // bigger interaction range
-            if (dist < maxDist && dist > 0) {
-                const force = (maxDist - dist) / maxDist;
-                p.x += (dx / dist) * force * 2.5; // stronger push
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            const range = 150;
+            if (dist < range) {
+                const force = (range - dist) / range;
+                p.x += (dx / dist) * force * 2.5;
                 p.y += (dy / dist) * force * 2.5;
             }
         }
 
-        // move normally
         p.x += p.vx;
         p.y += p.vy;
 
-        // wrap edges
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height;
         if (p.y > canvas.height) p.y = 0;
 
-        // draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = `hsl(${p.hue}, 70%, 80%)`;
         ctx.fill();
     });
 
-    // Draw lines between nearby particles for dynamic effect
     for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
             const dx = particles[i].x - particles[j].x;
@@ -81,18 +76,15 @@ function drawParticles() {
             }
         }
     }
-
     requestAnimationFrame(drawParticles);
 }
 drawParticles();
 
 
-
-
-const questionEl = document.getElementById('question');
-const optionsEl = document.getElementById('options');
-const scoreEl = document.getElementById('score');
-const livesEl = document.getElementById('lives');
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const scoreEl = document.getElementById("score");
+const livesEl = document.getElementById("lives");
 
 let currentAnswer = "";
 let score = 0;
@@ -105,53 +97,51 @@ async function loadQuestion() {
     optionsEl.innerHTML = "";
 
     try {
-        const apiURL = "https://api.allorigins.win/get?url=" +
+        const apiURL =
+            "https://api.allorigins.win/get?url=" +
             encodeURIComponent("https://opentdb.com/api.php?amount=1&type=multiple");
+
         const res = await fetch(apiURL);
         const wrapped = await res.json();
         const data = JSON.parse(wrapped.contents);
-
         const q = data.results[0];
-        const parser = new DOMParser();
-        const decode = t => parser.parseFromString(t, "text/html").body.textContent;
+
+        const decode = html =>
+            new DOMParser().parseFromString(html, "text/html").body.textContent;
 
         currentAnswer = decode(q.correct_answer);
-
-        const options = [...q.incorrect_answers.map(decode), currentAnswer];
+        let options = [...q.incorrect_answers.map(decode), currentAnswer];
         options.sort(() => Math.random() - 0.5);
 
         questionEl.textContent = decode(q.question);
-        optionsEl.innerHTML = '';
+        optionsEl.innerHTML = "";
 
-        options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.textContent = opt;
+        options.forEach(option => {
+            const btn = document.createElement("button");
+            btn.className = "option-btn";
+            btn.textContent = option;
             btn.onclick = () => checkAnswer(btn);
             optionsEl.appendChild(btn);
         });
 
-    } catch (err) {
-        console.error(err);
-        questionEl.textContent = "Failed to load question. Please try again.";
+    } catch {
+        questionEl.textContent = "Error loading question. Try refresh.";
     }
 }
 
-function checkAnswer(selectedBtn) {
-    const buttons = document.querySelectorAll('.option-btn');
-    buttons.forEach(b => b.disabled = true); // disable all
+function checkAnswer(btn) {
+    const buttons = document.querySelectorAll(".option-btn");
+    buttons.forEach(b => b.disabled = true);
 
-    // Highlight correct and wrong
     buttons.forEach(b => {
         if (b.textContent === currentAnswer) {
-            b.style.backgroundColor = '#4CAF50'; // green
-        } else if (b === selectedBtn && b.textContent !== currentAnswer) {
-            b.style.backgroundColor = '#f44336'; // red
+            b.style.backgroundColor = "#4CAF50";
+        } else if (b === btn) {
+            b.style.backgroundColor = "#f44336";
         }
     });
 
-    // Update score and lives
-    if (selectedBtn.textContent === currentAnswer) {
+    if (btn.textContent === currentAnswer) {
         score++;
         scoreEl.textContent = score;
     } else {
@@ -159,16 +149,14 @@ function checkAnswer(selectedBtn) {
         livesEl.textContent = lives;
     }
 
-    // Check game over
     if (lives <= 0) {
         questionEl.textContent = "💀 Game Over!";
         optionsEl.innerHTML += `<button onclick="location.reload()">Restart</button>`;
         return;
     }
 
-    // Load next question after 1 second
     setTimeout(loadQuestion, 1000);
 }
 
-
+if (questionEl) loadQuestion();
 
