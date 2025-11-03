@@ -95,22 +95,15 @@ async function loadQuestion() {
     optionsEl.innerHTML = "";
 
     try {
-        const apiURL =
-            "https://api.allorigins.win/raw?url=" +
-            encodeURIComponent("https://opentdb.com/api.php?amount=1&type=multiple");
-
-        const res = await fetch(apiURL);
+        const res = await fetch("https://the-trivia-api.com/v2/questions?limit=1");
         const data = await res.json();
-        const q = data.results[0];
+        const q = data[0];
 
-        const decode = html =>
-            new DOMParser().parseFromString(html, "text/html").body.textContent;
-
-        currentAnswer = decode(q.correct_answer);
-        let options = [...q.incorrect_answers.map(decode), currentAnswer];
+        currentAnswer = q.correctAnswer;
+        let options = [...q.incorrectAnswers, currentAnswer];
         options.sort(() => Math.random() - 0.5);
 
-        questionEl.textContent = decode(q.question);
+        questionEl.textContent = q.question.text;
         optionsEl.innerHTML = "";
 
         options.forEach(option => {
@@ -122,7 +115,8 @@ async function loadQuestion() {
         });
 
     } catch {
-        questionEl.textContent = "Error loading question. Refresh?";
+        questionEl.textContent = "Error loading question. Tap to retry.";
+        questionEl.onclick = loadQuestion;
     }
 }
 
@@ -131,11 +125,8 @@ function checkAnswer(btn) {
     buttons.forEach(b => b.disabled = true);
 
     buttons.forEach(b => {
-        if (b.textContent === currentAnswer) {
-            b.style.backgroundColor = "#4CAF50";
-        } else if (b === btn) {
-            b.style.backgroundColor = "#f44336";
-        }
+        if (b.textContent === currentAnswer) b.style.backgroundColor = "#4CAF50";
+        else if (b === btn) b.style.backgroundColor = "#f44336";
     });
 
     if (btn.textContent === currentAnswer) {
