@@ -21,7 +21,7 @@ function initParticles() {
         particles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            r: Math.random() * 2 + 1,
+            r: Math.random() * 4 + 2,
             vx: (Math.random() - 0.5) * 1,
             vy: (Math.random() - 0.5) * 1,
             hue: Math.random() * 360
@@ -68,7 +68,7 @@ function drawParticles() {
             if (dist < 100) {
                 ctx.beginPath();
                 ctx.strokeStyle = `rgba(255,255,255,${1 - dist / 100})`;
-                ctx.lineWidth = 0.7;
+                ctx.lineWidth = 1.5;
                 ctx.moveTo(particles[i].x, particles[i].y);
                 ctx.lineTo(particles[j].x, particles[j].y);
                 ctx.stroke();
@@ -150,4 +150,5 @@ if (questionEl) loadQuestion();
 
 const nextBtn = document.getElementById("nextBtn");
 if (nextBtn) nextBtn.addEventListener("click",loadQuestion);
+
 
