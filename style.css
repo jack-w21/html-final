@@ -158,4 +158,37 @@ peragrah {
 }
 
 
+.scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding: 10px 18px;
+    background: rgba(255,255,255,0.18);
+    border-radius: 10px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.scoreboard span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+
+#score, #lives {
+    font-weight: 700;
+    color: #00ff88; /* neon green — score color */
+}
+
+
+.lives-low {
+    color: #ff4a4a !important;
+}
+
+
+
 
