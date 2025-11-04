@@ -158,36 +158,45 @@ peragrah {
 }
 
 
-
 .stats-bar {
+    position: relative;
+    z-index: 10;
     display: flex;
     justify-content: center;
     gap: 25px;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 600;
-    margin-bottom: 15px;
-    padding: 10px 18px;
-    background: rgba(255,255,255,0.18);
-    border-radius: 10px;
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.3);
+    margin-top: 15px;
+    margin-bottom: 10px;
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.25);
 }
 
 .stats-bar span {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    color: white;
 }
 
-
-#score, #lives {
+#score {
+    color: #00ff9d;
     font-weight: 700;
-    color: #00ff88; /* neon green — score color */
 }
+
+#lives {
+    color: #ff4a4a;
+    font-weight: 700;
+}
+
 
 .lives-low {
-    color: #ff4a4a !important;
+    color: #ff0000 !important;
 }
+
+
+}
+
 
 
 
