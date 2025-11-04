@@ -9,7 +9,7 @@ resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
 let particles = [];
-const PARTICLE_COUNT = 100;
+const PARTICLE_COUNT = 150;
 let mouse = { x: null, y: null };
 
 window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
@@ -147,4 +147,5 @@ function checkAnswer(btn) {
 }
 
 if (questionEl) loadQuestion();
+
 
