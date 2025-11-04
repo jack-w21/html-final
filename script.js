@@ -135,6 +135,9 @@ function checkAnswer(btn) {
     } else {
         lives--;
         livesEl.textContent = lives;
+        if (lives <= 2) {
+            livesEl.classList.add("lives-low");
+        }
     }
 
     if (lives <= 0) {
@@ -150,5 +153,6 @@ if (questionEl) loadQuestion();
 
 const nextBtn = document.getElementById("nextBtn");
 if (nextBtn) nextBtn.addEventListener("click",loadQuestion);
+
 
 
