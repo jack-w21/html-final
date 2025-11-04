@@ -160,19 +160,19 @@ peragrah {
 
 
 .stats-bar {
-    position: fixed;
-    top: 30px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: fixed !important;
+    top: 40px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
     z-index: 999999;
     
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 25px;
+    gap: 22px;
 
     font-size: 22px;
-    font-weight: 700;
+    font-weight: 600;
     padding: 10px 22px;
 
     background: rgba(0, 0, 0, 0.45);
@@ -202,6 +202,7 @@ peragrah {
 .container {
     margin-top: 90px;
 }
+
 
 
 
