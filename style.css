@@ -164,7 +164,7 @@ peragrah {
     top: 15px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 100;
+    z-index: 999999;
     
     display: flex;
     justify-content: center;
@@ -198,6 +198,7 @@ peragrah {
 .lives-low {
     color: #ff0000 !important;
 }
+
 
 
 
