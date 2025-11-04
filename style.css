@@ -158,18 +158,23 @@ peragrah {
 }
 
 
+
 .stats-bar {
-    position: relative;
-    z-index: 10;
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    
     display: flex;
     justify-content: center;
     gap: 25px;
+
     font-size: 22px;
     font-weight: 600;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    padding: 10px 20px;
-    background: rgba(0, 0, 0, 0.35);
+    padding: 10px 22px;
+
+    background: rgba(0, 0, 0, 0.45);
     border-radius: 12px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,0.25);
@@ -193,6 +198,8 @@ peragrah {
 .lives-low {
     color: #ff0000 !important;
 }
+
+
 
 
 
