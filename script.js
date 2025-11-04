@@ -148,4 +148,6 @@ function checkAnswer(btn) {
 
 if (questionEl) loadQuestion();
 
+const nextBtn = document.getElementById("nextBtn");
+if (nextBtn) nextBtn.addEventListener("click",loadQuestion);
 
