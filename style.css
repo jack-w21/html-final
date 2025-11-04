@@ -168,16 +168,17 @@ peragrah {
     
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 25px;
 
     font-size: 22px;
-    font-weight: 600;
+    font-weight: 700;
     padding: 10px 22px;
 
     background: rgba(0, 0, 0, 0.45);
     border-radius: 12px;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.3);
 }
 
 .stats-bar span {
@@ -197,6 +198,9 @@ peragrah {
 
 .lives-low {
     color: #ff0000 !important;
+}
+.container {
+    margin-top: 90px;
 }
 
 
